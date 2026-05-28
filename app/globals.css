@@ -1,26 +1,288 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #ffffff;
+  --surface: #fafafa;
+  --surface-hover: #f0f0f0;
+  --border: #e5e5e5;
+  --border-strong: #d4d4d4;
+  --text: #0a0a0a;
+  --text-muted: #737373;
+  --text-dim: #a3a3a3;
+  --cta-bg: #0a0a0a;
+  --cta-hover: #262626;
+  --cta-text: #ffffff;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+}
+
+.dark {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface-hover: #1f1f1f;
+  --border: #262626;
+  --border-strong: #404040;
+  --text: #fafafa;
+  --text-muted: #a3a3a3;
+  --text-dim: #737373;
+  --cta-bg: #fafafa;
+  --cta-hover: #e5e5e5;
+  --cta-text: #0a0a0a;
+  --danger: #f87171;
+  --danger-bg: #1c0f0f;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: "Inter", "Helvetica Neue", "Arial", sans-serif;
+  --font-serif: "Georgia", "Palatino Linotype", "Book Antiqua", serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* { box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  line-height: 1.6;
 }
+
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; }
+
+::selection { background: var(--text); color: var(--bg); }
+
+/* ── Layout ── */
+
+.app-shell {
+  width: min(1100px, calc(100vw - 3rem));
+  margin-inline: auto;
+}
+
+.section { padding: 5rem 0; }
+.section-lg { padding: 7rem 0; }
+
+/* ── Nav ── */
+
+.top-nav {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Surfaces ── */
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+}
+
+.panel-soft {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+}
+
+/* ── Typography ── */
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.headline {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.display {
+  font-family: var(--font-serif);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.body-text {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+}
+
+.article-copy {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.article-copy p { margin: 0 0 1.25rem; }
+
+/* ── Form Fields ── */
+
+.field {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: border-color 0.15s;
+  border-radius: 0.875rem;
+}
+
+.field::placeholder { color: var(--text-dim); }
+
+.field:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+/* ── Buttons ── */
+
+.button-primary {
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.8rem 1.6rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  transition: background 0.15s;
+}
+
+.button-primary:hover { background: var(--cta-hover); }
+
+.button-secondary {
+  background: transparent;
+  border: 1.5px solid var(--border-strong);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: all 0.15s;
+}
+
+.button-secondary:hover {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.button-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  transition: background 0.15s;
+}
+
+.button-danger:hover { filter: brightness(0.95); }
+
+/* ── Quote ── */
+
+.quote {
+  font-style: italic;
+  color: var(--text);
+  border-left: 2px solid var(--text);
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.75rem 0.75rem 0;
+}
+
+.quote-author {
+  display: block;
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* ── TipTap ── */
+
+.tiptap-editor .ProseMirror {
+  min-height: 200px;
+  outline: none;
+  padding: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.tiptap-editor .ProseMirror p { margin: 0 0 0.75rem; }
+.tiptap-editor .ProseMirror h1 { font-size: 1.75rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
+.tiptap-editor .ProseMirror h2 { font-size: 1.4rem; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+.tiptap-editor .ProseMirror img { max-width: 100%; margin: 1rem 0; }
+.tiptap-editor .ProseMirror blockquote {
+  border-left: 2px solid var(--text);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.tiptap-editor .ProseMirror ul,
+.tiptap-editor .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.tiptap-content {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+.tiptap-content p { margin: 0 0 1.25rem; }
+.tiptap-content img { max-width: 100%; margin: 1.5rem 0; }
+.tiptap-content blockquote {
+  border-left: 2px solid var(--text);
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin: 1.25rem 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.tiptap-content h1, .tiptap-content h2, .tiptap-content h3 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  margin: 2rem 0 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.tiptap-content h1 { font-size: 1.75rem; }
+.tiptap-content h2 { font-size: 1.35rem; }
+.tiptap-content h3 { font-size: 1.1rem; }
+
+.tiptap-content ul, .tiptap-content ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.tiptap-content li { margin-bottom: 0.25rem; }
+.tiptap-content a { text-decoration: underline; text-underline-offset: 3px; }
+.tiptap-content a:hover { opacity: 0.7; }
