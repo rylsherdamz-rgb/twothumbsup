@@ -32,13 +32,33 @@ export async function updateSession(request: NextRequest) {
   const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
   const isAuthRoute = request.nextUrl.pathname.startsWith("/auth");
 
+  // Redirect unauthenticated users from admin routes
   if (isAdminRoute && !user) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+    return NextResponse.redirect(new URL("/?auth=login", request.url));
   }
 
+  // Check admin role for admin routes
+  if (isAdminRoute && user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    
+    if (profile?.role !== 'admin') {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  // Redirect authenticated admins away from auth pages
   if (isAuthRoute && user) {
-    const isAdmin = user.user_metadata?.role === "admin" || user.app_metadata?.role === "admin";
-    if (isAdmin) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    
+    if (profile?.role === 'admin') {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
   }

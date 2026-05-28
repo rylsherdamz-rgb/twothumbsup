@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import TipTapEditor from "@/components/TipTapEditor";
 import ImageUpload from "@/components/ImageUpload";
@@ -12,12 +12,13 @@ function slugify(text: string) { return text.toLowerCase().replace(/[^\w\s-]/g, 
 
 export default function NewPostPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [slug, setSlug] = useState("");
-  const [type, setType] = useState<"blog" | "quote">("blog");
+  const [type, setType] = useState<"blog" | "quote">((searchParams.get("type") as "blog" | "quote") || "blog");
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [tags, setTags] = useState("");
   const [saving, setSaving] = useState(false);

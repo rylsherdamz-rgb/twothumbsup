@@ -22,8 +22,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) router.push("/auth/login");
-  }, [user, loading, router]);
+    if (!loading && !user) router.push("/?auth=login");
+    // Redirect non-admins to home if they try to access admin routes (except viewing their own profile)
+    if (!loading && user && profile?.role !== 'admin' && !pathname.startsWith('/profile')) {
+      router.push("/");
+    }
+  }, [user, loading, router, profile, pathname]);
 
   if (loading) {
     return (
