@@ -246,3 +246,10 @@ export const getAllTags = cache(async (): Promise<string[]> => {
 
   return Array.from(tagSet).sort();
 });
+
+export function getReadingTime(content: string): number {
+  const wordsPerMinute = 200;
+  const text = content.replace(/<[^>]*>/g, "");
+  const wordCount = text.split(/\s+/).length;
+  return Math.ceil(wordCount / wordsPerMinute);
+}

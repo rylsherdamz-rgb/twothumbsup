@@ -3,10 +3,11 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PostCard from "@/components/PostCard";
 import QuoteCard from "@/components/QuoteCard";
-import AnimateOnScroll from "@/components/AnimateOnScroll";
 import PageTransition from "@/components/PageTransition";
 import ParticleBackground from "@/components/ParticleBackground";
 import Image from "next/image";
+import { Stagger, StaggerItem } from "@/components/animations/Stagger";
+import QuoteOfTheDayCard from "@/components/QuoteOfTheDay";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,13 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Quote of the Day */}
+      <section className="section">
+        <div className="app-shell">
+          <QuoteOfTheDayCard />
+        </div>
+      </section>
+
       {/* Latest Blog */}
       {latestBlog.length > 0 && (
         <section className="section">
@@ -67,11 +75,13 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <AnimateOnScroll className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {latestBlog.map((post) => (
-                <PostCard key={post.id} post={post} />
+                <StaggerItem key={post.id}>
+                  <PostCard post={post} />
+                </StaggerItem>
               ))}
-            </AnimateOnScroll>
+            </Stagger>
           </div>
         </section>
       )}
@@ -90,11 +100,13 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <AnimateOnScroll className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {latestQuotes.map((post) => (
-                <QuoteCard key={post.id} post={post} />
+                <StaggerItem key={post.id}>
+                  <QuoteCard post={post} />
+                </StaggerItem>
               ))}
-            </AnimateOnScroll>
+            </Stagger>
           </div>
         </section>
       )}

@@ -8,6 +8,9 @@ import LetterAvatar from "@/components/LetterAvatar";
 import { Menu, X, Sun, Moon, Search, User, LayoutDashboard, LogOut } from "lucide-react";
 import gsap from "gsap";
 import Image from "next/image";
+import { useToast } from "@/components/ui/ToastProvider";
+import StreakBadge from "@/components/StreakBadge";
+import { useEngagementStore } from "@/lib/store";
 
 const publicLinks = [
   { label: "Blog", href: "/blog" },
@@ -19,6 +22,9 @@ export default function NavigationBar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, profile, loading, signOut } = useAuth();
+  const { showSuccess, showInfo } = useToast();
+  const updateVisit = useEngagementStore((state) => state.updateVisit);
+  const streak = useEngagementStore((state) => state.visitStreak);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -28,6 +34,13 @@ export default function NavigationBar() {
   const mobileRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    updateVisit();
+    if (streak >= 7 && streak % 7 === 0) {
+      showInfo(`🔥 ${streak} day streak! Keep it going!`);
+    }
+  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
@@ -148,7 +161,10 @@ export default function NavigationBar() {
                 {dropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-52 border border-[var(--border)] rounded-2xl bg-[var(--bg)] shadow-lg overflow-hidden z-50">
                     <div className="p-3 border-b border-[var(--border)]">
-                      <p className="text-sm font-semibold truncate">{displayName}</p>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-semibold truncate">{displayName}</p>
+                        <StreakBadge />
+                      </div>
                       <p className="text-xs text-[var(--text-muted)] truncate">{user.email}</p>
                     </div>
                     <div className="py-1">

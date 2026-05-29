@@ -1,12 +1,13 @@
-import { getPostBySlug } from "@/lib/content";
+import { getPostBySlug, getReadingTime } from "@/lib/content";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft, Share2, Clock } from "lucide-react";
 import CommentSection from "@/components/CommentSection";
 import ReactionButton from "@/components/ReactionButton";
 import PageTransition from "@/components/PageTransition";
+import ReadingProgress from "@/components/ReadingProgress";
 
 export const dynamic = "force-dynamic";
 
@@ -31,9 +32,11 @@ export default async function BlogPostPage({ params }: Props) {
   const publishedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
     : null;
+  const readingTime = getReadingTime(post.content);
 
   return (
     <PageTransition>
+      <ReadingProgress />
       <article className="app-shell py-10">
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] mb-10 transition-colors">
           <ArrowLeft className="w-4 h-4" />
@@ -46,7 +49,12 @@ export default async function BlogPostPage({ params }: Props) {
           <p className="body-text text-lg mb-6">{post.excerpt}</p>
           <div className="flex items-center gap-4 text-sm text-[var(--text-muted)]">
             <span>{post.authorName}</span>
-            {publishedDate && <span>{publishedDate}</span>}
+            {publishedDate && <span>• {publishedDate}</span>}
+            <span>•</span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" />
+              {readingTime} min read
+            </span>
           </div>
           {post.tags && post.tags.length > 0 && (
             <div className="flex items-center gap-2 mt-4 flex-wrap">

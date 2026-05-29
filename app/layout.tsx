@@ -4,6 +4,8 @@ import { AuthProvider } from "@/components/AuthProvider";
 import AuthModal from "@/components/AuthModal";
 import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";
+import { ToastProvider } from "@/components/ui/ToastProvider";
+import WelcomeToast from "@/components/WelcomeToast";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://twothumbsup.local"),
@@ -24,11 +26,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen bg-[var(--background)] text-[var(--foreground)] antialiased">
         <AuthProvider>
-          <AuthModal>
-            <NavigationBar />
-            <main className="pt-6">{children}</main>
-            <Footer />
-          </AuthModal>
+          <ToastProvider>
+            <WelcomeToast />
+            <AuthModal>
+              <NavigationBar />
+              <main className="pt-6">{children}</main>
+              <Footer />
+            </AuthModal>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>
