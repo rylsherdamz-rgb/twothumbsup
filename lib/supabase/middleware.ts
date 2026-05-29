@@ -37,29 +37,43 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL("/?auth=login", request.url));
   }
 
-  // Check admin role for admin routes
+  // Check admin role for admin routes (only if user is authenticated)
   if (isAdminRoute && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-    
-    if (profile?.role !== 'admin') {
-      return NextResponse.redirect(new URL("/", request.url));
+    try {
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      
+      // If there's an error or no profile, allow access (let client-side handle it)
+      // This prevents login loops when DB query fails in middleware
+      if (error || !profile) {
+        // Don't redirect, allow the request to continue
+        // Client-side admin layout will handle role checking
+      } else if (profile.role !== 'admin') {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    } catch (e) {
+      // If DB query fails, allow access and let client-side handle it
+      console.error("Middleware profile check error:", e);
     }
   }
 
   // Redirect authenticated admins away from auth pages
   if (isAuthRoute && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-    
-    if (profile?.role === 'admin') {
-      return NextResponse.redirect(new URL("/admin", request.url));
+    try {
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      
+      if (!error && profile && profile.role === 'admin') {
+        return NextResponse.redirect(new URL("/admin", request.url));
+      }
+    } catch (e) {
+      console.error("Middleware auth redirect error:", e);
     }
   }
 

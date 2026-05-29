@@ -33,9 +33,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = useCallback(async (userId: string) => {
     try {
       const supabase = createBrowserSupabaseClient();
-      const { data } = await supabase.from("profiles").select("username, display_name, avatar_url, role").eq("id", userId).single();
-      if (data) setProfile(data as Profile);
-    } catch {}
+      const { data, error } = await supabase.from("profiles").select("username, display_name, avatar_url, role").eq("id", userId).single();
+      if (error) {
+        console.error("Profile fetch error:", error);
+      }
+      if (data) {
+        setProfile(data as Profile);
+      } else {
+        console.warn("No profile data found for user:", userId);
+      }
+    } catch (err) {
+      console.error("Profile fetch exception:", err);
+    }
   }, []);
 
   useEffect(() => {
