@@ -11,7 +11,7 @@ interface StaggerProps {
   itemDelay?: number;
 }
 
-export default function Stagger({ children, className = "", delay = 0, itemDelay = 0.05 }: StaggerProps) {
+export function Stagger({ children, className = "", delay = 0, itemDelay = 0.05 }: StaggerProps) {
   return (
     <motion.div
       initial="hidden"
@@ -46,3 +46,4 @@ export function StaggerItem({ children, className = "" }: StaggerItemProps) {
     </motion.div>
   );
 }
+export default Stagger;
